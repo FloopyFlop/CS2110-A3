@@ -51,7 +51,7 @@ public class Trading {
          * Loop invariant: `optProfit` is the maximum profit that can be achieved when the share is
          * purchased at a time in `[..i)`.
          */
-        while (i<prices.length) {
+        while (i < prices.length - 1) {
             assert optimalProfit1Invariant(prices, optProfit, i); // DO NOT COUNT IN RUNTIME ANALYSIS
 
             int futureMaxValueIndex = argmaxTail(prices,i);
@@ -80,19 +80,32 @@ public class Trading {
         //  the loop. Your implementation should have worst-case runtime complexity O(N), where
         //  N=prices.length, and worst-case space complexity O(1).
 
+        int optProfit = 0;
+
+        int j = prices.length - 2;
+        int maxSell = prices[prices.length - 1];
+
         /*
          * Loop invariant: `optProfit` is the maximum profit that can be achieved when the share
          * is purchased at a time in `(j..]`.
+         * Augmented invariant: `maxSell` is the maximum value in `prices(j..]`.
          */
-        // while () {
-        //   assert optimalProfit2Invariant(prices, optProfit, j);
-        //   // The above `assert` statement should appear as the first line in your loop body.
-        //   // You may ignore it if you'd like. It is here so the autograder can verify that
-        //   // you have maintained the invariant. Do not factor this `assert` statement into
-        //   // your runtime complexity analysis.
-        // }
+        while (j >= 0) {
+            assert optimalProfit2Invariant(prices, optProfit, j);
 
-        throw new UnsupportedOperationException();
+            int profitIfBuyNow = maxSell - prices[j];
+            if (profitIfBuyNow > optProfit) {
+                optProfit = profitIfBuyNow;
+            }
+
+            if (prices[j] > maxSell) {
+                maxSell = prices[j];
+            }
+
+            j--;
+        }
+
+        return optProfit;
     }
 
 }
