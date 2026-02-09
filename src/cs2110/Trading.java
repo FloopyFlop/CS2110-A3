@@ -24,10 +24,12 @@ public class Trading {
 
         /* Loop invariant: {max} will always be the max value in array range (i,j]*/
         while (j<max_index) {
+            // Check if the max is now invalid
             if (prices[j] >= max) {
                 max = prices[j];
                 k = j;
             }
+            j++;
         }
         return k;
     }
@@ -42,19 +44,28 @@ public class Trading {
         //  definition of this `while` loop so that it has the given loop invariant. The body of
         //  this loop should call `argmaxTail()` in each iteration.
 
+        int optProfit = 0;
+        int i = 0;
+
         /*
          * Loop invariant: `optProfit` is the maximum profit that can be achieved when the share is
          * purchased at a time in `[..i)`.
          */
-        // while () {
-        //   assert optimalProfit1Invariant(prices, optProfit, i);
-        //   // The above `assert` statement should appear as the first line in your loop body.
-        //   // You may ignore it if you'd like. It is here so the autograder can verify that
-        //   // you have maintained the invariant. Do not factor this `assert` statement into
-        //   // your runtime complexity analysis.
-        // }
+        while (i<prices.length) {
+            assert optimalProfit1Invariant(prices, optProfit, i); // DO NOT COUNT IN RUNTIME ANALYSIS
 
-        throw new UnsupportedOperationException();
+            int futureMaxValueIndex = argmaxTail(prices,i);
+
+            // Evaluate profit of current term
+            int currentProfit = prices[futureMaxValueIndex] - prices[i];
+            if (currentProfit > optProfit) {
+                optProfit = currentProfit;
+            }
+
+            i++;
+        }
+
+        return optProfit;
     }
 
     /**
