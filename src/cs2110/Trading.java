@@ -1,6 +1,7 @@
 package cs2110;
 
 import java.util.Random;
+
 import static cs2110.LoopInvariants.*;
 
 /**
@@ -14,16 +15,14 @@ public class Trading {
      * prices.length-1`.
      */
     static int argmaxTail(int[] prices, int i) {
-        // TODO 2: Implement this method according to its specifications. Use a `while` loop
-        //  documented with the invariant you visualized in part 1.
 
-        int j = i+1;
+        int j = i + 1;
         int max_index = prices.length;
         int max = prices[j];
         int k = j;
 
         /* Loop invariant: {max} will always be the max value in array range (i,j]*/
-        while (j<max_index) {
+        while (j < max_index) {
             // Check if the max is now invalid
             if (prices[j] >= max) {
                 max = prices[j];
@@ -40,9 +39,6 @@ public class Trading {
      * transaction can be made. Requires `prices.length > 1`, and each entry of `prices` is >= 0.
      */
     static int optimalProfit1(int[] prices) {
-        // TODO 3: Implement this method according to its specifications. Uncomment and fill in the
-        //  definition of this `while` loop so that it has the given loop invariant. The body of
-        //  this loop should call `argmaxTail()` in each iteration.
 
         int optProfit = 0;
         int i = 0;
@@ -52,9 +48,10 @@ public class Trading {
          * purchased at a time in `[..i)`.
          */
         while (i < prices.length - 1) {
-            assert optimalProfit1Invariant(prices, optProfit, i); // DO NOT COUNT IN RUNTIME ANALYSIS
+            assert optimalProfit1Invariant(prices, optProfit,
+                    i); // DO NOT COUNT IN RUNTIME ANALYSIS
 
-            int futureMaxValueIndex = argmaxTail(prices,i);
+            int futureMaxValueIndex = argmaxTail(prices, i);
 
             // Evaluate profit of current term
             int currentProfit = prices[futureMaxValueIndex] - prices[i];
@@ -64,7 +61,6 @@ public class Trading {
 
             i++;
         }
-
         return optProfit;
     }
 
@@ -74,12 +70,6 @@ public class Trading {
      * transaction can be made. Requires `prices.length > 1`, and each entry of `prices` is >= 0.
      */
     static int optimalProfit2(int[] prices) {
-        // TODO 5: Implement this method according to its specifications. Uncomment and fill in the
-        //  definition of this `while` loop so that it has the given loop invariant. Augment this
-        //  invariant to account for any additional local variables you modify within the body of
-        //  the loop. Your implementation should have worst-case runtime complexity O(N), where
-        //  N=prices.length, and worst-case space complexity O(1).
-
         int optProfit = 0;
 
         int j = prices.length - 2;
@@ -104,8 +94,41 @@ public class Trading {
 
             j--;
         }
-
         return optProfit;
+    }
+
+    public static void main(String[] args) {
+
+        // Generating Empty Array
+        int[][] prices = new int[10][];
+        for (int i = 0; i < 10; i++) {
+            int[] prices_array = new int[(i + 1) * 100000];
+            prices[i] = prices_array;
+        }
+
+        // Filling Array with Data
+        for (int i = 0; i < prices.length; i++) {
+            int prev_price = (int) (Math.random() * 900 + 101);
+            for (int j = 0; j < prices[i].length; j++) {
+                prices[i][j] = prev_price + (int) (Math.random() * 10 - 5 * Math.random() * 5);
+            }
+        }
+
+        // Performing Runtime Analysis
+        for (int i = 0; i < prices.length; i++) {
+            float t_i = System.nanoTime();
+            int cba = optimalProfit1(prices[i]);
+            float t_f = System.nanoTime();
+            System.out.println("The time for the method optimalProfit1 to complete for an array "
+                    + "with size " + prices[i].length + " is " + (t_f - t_i) * 1000 + " ms.");
+
+            t_i = System.nanoTime();
+            int abc = optimalProfit2(prices[i]);
+            t_f = System.nanoTime();
+            System.out.println("The time for the method optimalProfit2 to complete for an array "
+                    + "with size " + prices[i].length + " is " + (t_f - t_i) * 1000 + " ms.");
+        }
+
     }
 
 }
