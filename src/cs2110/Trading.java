@@ -116,17 +116,19 @@ public class Trading {
 
         // Performing Runtime Analysis
         for (int i = 0; i < prices.length; i++) {
-            float t_i = System.nanoTime();
-            int cba = optimalProfit1(prices[i]);
-            float t_f = System.nanoTime();
-            System.out.println("The time for the method optimalProfit1 to complete for an array "
-                    + "with size " + prices[i].length + " is " + (t_f - t_i) * 1000 + " ms.");
+            long start1 = System.nanoTime();
+            int result1 = optimalProfit1(prices[i]);
+            long end1 = System.nanoTime();
 
-            t_i = System.nanoTime();
-            int abc = optimalProfit2(prices[i]);
-            t_f = System.nanoTime();
-            System.out.println("The time for the method optimalProfit2 to complete for an array "
-                    + "with size " + prices[i].length + " is " + (t_f - t_i) * 1000 + " ms.");
+            long start2 = System.nanoTime();
+            int result2 = optimalProfit2(prices[i]);
+            long end2 = System.nanoTime();
+
+            System.out.println("optimalProfit1 (n=" + prices[i].length + "): "
+                    + ((end1 - start1) / 1_000_000.0) + " ms");
+
+            System.out.println("optimalProfit2 (n=" + prices[i].length + "): "
+                    + ((end2 - start2) / 1_000_000.0) + " ms");
         }
 
     }
